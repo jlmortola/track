@@ -1,21 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
+import { createBottomTabNavigator } from 'react-navigation-tabs'
+import Account from 'screens/Account'
+import ResolveAuth from 'screens/ResolveAuth'
+import Signin from 'screens/Signin'
+import Signup from 'screens/Signup'
+import TrackCreate from 'screens/TrackCreate'
+import TrackDetail from 'screens/TrackDetail'
+import TrackList from 'screens/TrackList'
+import AuthProvider from 'context/auth'
+import { navigationRef, setNavigation } from 'utils/navigation'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const switchNavigator = createSwitchNavigator({
+  ResolveAuth,
+  loginFlow: createStackNavigator({
+    Signup,
+    Signin
+  }),
+  mainFlow: createBottomTabNavigator({
+    trackListFlow: createStackNavigator({
+      TrackList,
+      TrackDetail
+    }),
+    TrackCreate,
+    Account
+  })
+})
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const AppContainer = createAppContainer(switchNavigator)
+
+
+const App = () => (
+  <AuthProvider>
+    <AppContainer ref={(navigation) => setNavigation(navigation)} />
+  </AuthProvider> 
+)
+
+export default App

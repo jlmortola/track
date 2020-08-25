@@ -9,6 +9,7 @@ module.exports = (api) => {
           alias: {
             'screens': './src/screens',
             'components': './src/components',
+            'context': './src/context',
             'utils': './src/utils',
           },
         },

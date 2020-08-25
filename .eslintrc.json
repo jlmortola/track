@@ -8,7 +8,8 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "rules": {
-      "semi": ["never"]
+      "semi": ["never"],
+      "no-unused-vars": ["error",  { "vars": "all" }]
   }
 }
 
