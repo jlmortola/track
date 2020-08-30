@@ -10,6 +10,7 @@ import TrackCreate from 'screens/TrackCreate'
 import TrackDetail from 'screens/TrackDetail'
 import TrackList from 'screens/TrackList'
 import AuthProvider from 'context/auth'
+import TrackProvider from 'context/track'
 import { navigationRef, setNavigation } from 'utils/navigation'
 
 const switchNavigator = createSwitchNavigator({
@@ -33,7 +34,9 @@ const AppContainer = createAppContainer(switchNavigator)
 
 const App = () => (
   <AuthProvider>
-    <AppContainer ref={(navigation) => setNavigation(navigation)} />
+    <TrackProvider>
+      <AppContainer ref={(navigation) => setNavigation(navigation)} />
+    </TrackProvider>
   </AuthProvider> 
 )
 

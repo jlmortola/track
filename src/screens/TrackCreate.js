@@ -1,41 +1,25 @@
 import 'utils/mockLocation'
-import React, { useState, useEffect }  from 'react'
+import React, { useCallback }  from 'react'
 import { Button, FlatList,  StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-elements'
-import { SafeAreaView } from 'react-navigation'
-import { requestPermissionsAsync, watchPositionAsync, Accuracy } from 'expo-location'
+import { SafeAreaView, withNavigationFocus } from 'react-navigation'
 import Map from 'components/Map'
+import { useTrackContext } from 'context/track'
+import useLocation from 'utils/hooks/useLocation'
+import TrackFrom from 'components/TrackForm'
 
-const TrackCreate = () => {
-  const [error, setError] = useState('')
+const TrackCreate = ({ isFocused }) => {
+  const { state: {isRecording, locations}, addLocation } = useTrackContext()
 
-  const startWatching = async () => {
-    try {
-      const { granted } = await requestPermissionsAsync();
+  const callback = useCallback(location => { addLocation(location, isRecording) }, [isRecording])
 
-      if (!granted) {
-        throw new Error('Location permission not granted');
-      }
-      await watchPositionAsync({
-        accuracy: Accuracy.BestForNavigation,
-        timeInterval: 1000,
-        distanceInterval: 10
-      }, location => {
-        console.log("startWatching -> location", location)
-      })
-    } catch (e) {
-      setError(e);
-    }
-  };
+  const [error] = useLocation(isFocused || isRecording, callback)
 
-  useEffect(() => {
-    startWatching()
-  }, [])
   return (
     <SafeAreaView forceInset={{top: 'always'}}>
-      <Map />
+      <Map /> 
       {error ? <Text>{error}</Text> : null}
-      <Text>Hello</Text>
+      <TrackFrom />
     </SafeAreaView>
 
   )
@@ -43,4 +27,4 @@ const TrackCreate = () => {
 
 const styles = StyleSheet.create({})
 
-export default TrackCreate
+export default withNavigationFocus(TrackCreate)
